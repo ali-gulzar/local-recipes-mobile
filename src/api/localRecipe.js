@@ -1,15 +1,19 @@
+import axios from 'axios';
+import { getType } from 'mime';
+
 const localRecipeAPIBaseUrl = 'https://g72nix.deta.dev/';
 
-const fetchRecipes = (filesData) => {
-    fetch(localRecipeAPIBaseUrl, {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: filesData,
-    })
-        .then((response) => response.json())
-        .then((json) => console.log(json))
-        .catch(console.error(error));
+export const fetchRecipes = (image) => {
+    const file = {
+        ...image,
+        type: getType(image.uri),
+        name: image.uri.split('/').pop(),
+    };
+    console.log(file);
+    let formData = new FormData();
+    formData.append('image', file);
+
+    return axios.post(localRecipeAPIBaseUrl, formData, {
+        headers: { 'content-type': 'multipart/form-data' },
+    });
 };
