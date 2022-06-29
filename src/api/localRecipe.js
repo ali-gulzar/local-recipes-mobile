@@ -9,7 +9,6 @@ export const fetchRecipes = (image) => {
         type: getType(image.uri),
         name: image.uri.split('/').pop(),
     };
-    console.log(file);
     let formData = new FormData();
     formData.append('image', file);
 

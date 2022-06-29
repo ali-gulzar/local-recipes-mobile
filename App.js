@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Text, NativeBaseProvider, Box, Fab, Spinner } from 'native-base';
+import { StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { fetchRecipes } from './src/api/localRecipe';
+import { Flex, Box, Text, FAB } from '@react-native-material/core';
+import Icon from '@expo/vector-icons/Entypo';
 
 export default function App() {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [recipes, setRecipes] = useState([]);
 
     const getImage = async () => {
@@ -18,6 +20,7 @@ export default function App() {
             setLoading(true);
             try {
                 const response = await fetchRecipes(result);
+                console.log(response.data)
                 setRecipes(response.data);
             } catch (error) {
                 console.error(error);
@@ -27,16 +30,29 @@ export default function App() {
     };
 
     return (
-        <NativeBaseProvider>
-            <Box flex={1} backgroundColor="coolGray.700">
-                <Box height={100}>
-                    <Text position="absolute" bottom={0} left={0} fontSize="3xl" color="white" marginLeft={5} bold>
-                        Zish
-                    </Text>
-                </Box>
-                {loading && <Spinner color="indigo.500" accessibilityLabel="Loading" />}
+        <Flex fill style={styles.app}>
+            <Box style={styles.titleContainer}>
+                <Text style={styles.title}>Zish</Text>
             </Box>
-            <Fab shadow={4} size="sm" label="Open Gallery" marginLeft={2} marginBottom={2} onPress={getImage} />
-        </NativeBaseProvider>
+            <FAB variant="extended" icon={<Icon name="image"/>} label="Open Gallery" onPress={getImage}/>
+        </Flex>
     );
 }
+
+const styles = StyleSheet.create({
+    app: {
+        backgroundColor: '#0369a1',
+    },
+    titleContainer: {
+        height: 100,
+    },
+    title: {
+        position: 'absolute',
+        bottom: 10,
+        left: 0,
+        marginLeft: 10,
+        fontSize: 30,
+        color: 'white',
+        fontWeight: 'bold',
+    },
+});
